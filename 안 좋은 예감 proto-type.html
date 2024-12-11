@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>안 좋은 예감 - 추리 공포 게임</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #222;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .game-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .choices {
+            list-style-type: none;
+            padding: 0;
+        }
+        .choices li {
+            background-color: #444;
+            padding: 10px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .choices li:hover {
+            background-color: #666;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #555;
+            border: none;
+            color: #fff;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #777;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>안 좋은 예감</h1>
+    <div id="game-text" class="game-text">
+        <!-- 게임 텍스트가 여기에 표시됩니다. -->
+    </div>
+    <ul id="choices" class="choices">
+        <!-- 선택지가 여기에 표시됩니다. -->
+    </ul>
+    <button id="next-button" class="button" style="display: none;" onclick="nextChapter()">다음</button>
+</div>
+
+<footer>
+    <p>&copy; 2024 추리 공포 게임. 모든 권리 보유.</p>
+</footer>
+
+<script>
+    let currentChapter = 0;
+    let story = [
+        {
+            text: "어두운 밤, 당신은 낯선 집 안에 갇혀 있습니다. 창문도 잠겨 있고, 문도 잠겨 있어 탈출할 수 없습니다. 느껴지는 공포와 불안은 점점 더 커져만 가고, 무언가 이상한 일이 일어날 것 같은 예감이 듭니다.",
+            choices: [
+                { text: "주위를 살펴본다.", nextChapter: 1 },
+                { text: "문을 밀어 본다.", nextChapter: 2 }
+            ]
+        },
+        {
+            text: "방 안에는 고요함만이 감돕니다. 천장에 달린 전등이 간헐적으로 깜빡이고, 벽에 적힌 낙서들이 신경을 거슬리게 합니다. 이 방에는 뭔가 다른 존재가 있다는 느낌이 듭니다.",
+            choices: [
+                { text: "낙서를 자세히 살펴본다.", nextChapter: 3 },
+                { text: "천장을 조사해본다.", nextChapter: 4 }
+            ]
+        },
+        {
+            text: "낙서들은 점점 더 기괴해지고, 의미 없는 글자가 반복적으로 나타납니다. '죽음이 다가오고 있다'는 메시지가 반복됩니다. 이 메시지가 당신에게 경고를 보내는 것일까요?",
+            choices: [
+                { text: "이 메시지에 대해 더 알아본다.", nextChapter: 5 },
+                { text: "이상한 낙서를 무시하고 계속 진행한다.", nextChapter: 6 }
+            ]
+        },
+        {
+            text: "천장의 전등은 이제 거의 깜빡이지 않습니다. 그 순간, 문이 열리기 시작합니다. 그러나 그 문 뒤에는... 예상치 못한 일이 기다리고 있습니다.",
+            choices: [
+                { text: "문을 통해 나아간다.", nextChapter: 7 },
+                { text: "그 자리에 멈춰 서서 생각한다.", nextChapter: 8 }
+            ]
+        },
+        {
+            text: "지하실 문을 열자 차가운 공기가 당신을 감쌉니다. 벽에는 기괴한 그림자들이 춤을 추고, 한쪽 구석에서 낮은 울음소리가 들립니다.",
+            choices: [
+                { text: "소리가 나는 곳으로 다가간다.", nextChapter: 9 },
+                { text: "소리를 무시하고 다른 길을 찾는다.", nextChapter: 10 }
+            ]
+        },
+        {
+            text: "당신은 그림자를 따라가다 발밑이 꺼지는 느낌과 함께 깊은 구덩이에 떨어집니다. 아래에는 뼈들이 흩어져 있고, 희미한 빛 속에서 무언가 움직이는 기척이 느껴집니다.",
+            choices: [
+                { text: "움직임의 정체를 확인한다.", nextChapter: 11 },
+                { text: "움직임을 피하며 다른 출구를 찾는다.", nextChapter: 12 }
+            ]
+        },
+        {
+            text: "움직이는 존재는 고통에 찬 얼굴을 가진 그림자였습니다. 그림자는 다가오며 속삭입니다. '너도 여기서 영원히...'",
+            choices: [
+                { text: "그림자에게 말을 걸어본다.", nextChapter: 13 },
+                { text: "그림자에게서 도망친다.", nextChapter: 14 }
+            ]
+        },
+        {
+            text: "당신은 그림자의 속삭임에 매료되어 무언가를 기억하기 시작합니다. 여기서 일어난 모든 일들이 당신과 관련이 있는 것 같습니다. 문득 모든 전등이 꺼지고...",
+            choices: [
+                { text: "이야기를 계속 진행한다.", nextChapter: 8 }
+            ]
+        },
+        {
+            text: "모든 것이 끝났다고 생각한 순간, 작은 노움이 나타나더니 외칩니다: '낚였노 ㅋㅋㅋㅋㅋㅋㅋㅋ'. 당신은 혼란스러움과 허탈함 속에서 정신을 차립니다. 게임 오버!",
+            choices: [
+                { text: "다시 시작한다.", nextChapter: 0 }
+            ]
+        }
+    ];
+
+    function startGame() {
+        currentChapter = 0;
+        showChapter();
+    }
+
+    function showChapter() {
+        let chapter = story[currentChapter];
+        document.getElementById('game-text').innerText = chapter.text;
+        let choices = document.getElementById('choices');
+        choices.innerHTML = '';
+        
+        chapter.choices.forEach(choice => {
+            let li = document.createElement('li');
+            li.innerText = choice.text;
+            li.onclick = () => chooseChoice(choice.nextChapter);
+            choices.appendChild(li);
+        });
+        document.getElementById('next-button').style.display = 'none';
+    }
+
+    function chooseChoice(nextChapter) {
+        currentChapter = nextChapter;
+        showChapter();
+    }
+
+    function nextChapter() {
+        currentChapter++;
+        showChapter();
+    }
+
+    startGame();
+</script>
+
+</body>
+</html>
